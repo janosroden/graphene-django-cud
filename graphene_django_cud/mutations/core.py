@@ -1,4 +1,5 @@
 from typing import Iterable, Union
+import uuid
 
 from django.db import models
 from graphene import Mutation
@@ -338,7 +339,7 @@ class DjangoCudBase(Mutation):
                 # The order here is important
                 elif isinstance(field, models.OneToOneField):
                     # If the value is an integer or a string, we assume it is an ID
-                    if isinstance(value, str) or isinstance(value, int):
+                    if isinstance(value, (str, int, uuid.UUID)):
                         name = getattr(field, "db_column", None) or name + "_id"
                         new_value = disambiguate_id(value)
                     else:
@@ -407,7 +408,7 @@ class DjangoCudBase(Mutation):
                 # Value was not transformed
                 if new_value == value:
                     # If the value is an integer or a string, we assume it is an ID
-                    if isinstance(value, str) or isinstance(value, int):
+                    if isinstance(value, (str, int, uuid.UUID)):
                         name = getattr(field, "db_column", None) or name + "_id"
                         new_value = disambiguate_id(value)
                     else:
@@ -605,7 +606,7 @@ class DjangoCudBase(Mutation):
                     new_value = disambiguate_id(value)
                 elif isinstance(field, models.OneToOneField):
                     # If the value is an integer or a string, we assume it is an ID
-                    if isinstance(value, str) or isinstance(value, int):
+                    if isinstance(value, (str, int, uuid.UUID)):
                         name = getattr(field, "db_column", None) or name + "_id"
                         new_value = disambiguate_id(value)
                     else:
@@ -617,7 +618,7 @@ class DjangoCudBase(Mutation):
                         )
                 elif isinstance(field, models.OneToOneRel):
                     # If the value is an integer or a string, we assume it is an ID
-                    if isinstance(value, str) or isinstance(value, int):
+                    if isinstance(value, (str, int, uuid.UUID)):
                         name = getattr(field, "db_column", None) or name + "_id"
                         new_value = disambiguate_id(value)
                     else:
