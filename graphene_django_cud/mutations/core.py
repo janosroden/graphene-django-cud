@@ -344,11 +344,11 @@ class DjangoCudBase(Mutation):
         # parents before proceeding.
         for name, extras in foreign_key_extras.items():
             value = input.get(name, None)
-            field = Model._meta.get_field(name)
+            if value:
+                field = Model._meta.get_field(name)
 
-            obj_id = cls.get_or_create_foreign_obj(field, value, extras, info)
-
-            model_field_values[name + "_id"] = obj_id
+                obj_id = cls.get_or_create_foreign_obj(field, value, extras, info)
+                model_field_values[name + "_id"] = obj_id
 
         # Foreign keys are added, we are ready to create our object
         obj = Model.objects.create(**model_field_values)
@@ -612,10 +612,11 @@ class DjangoCudBase(Mutation):
         # Handle extras fields
         for name, extras in foreign_key_extras.items():
             value = input.get(name, None)
-            field = Model._meta.get_field(name)
+            if value:
+                field = Model._meta.get_field(name)
 
-            obj_id = cls.get_or_create_foreign_obj(field, value, extras, info)
-            setattr(obj, name + "_id", obj_id)
+                obj_id = cls.get_or_create_foreign_obj(field, value, extras, info)
+                setattr(obj, name + "_id", obj_id)
 
         for name, extras in many_to_many_extras.items():
             field = Model._meta.get_field(name)
